@@ -4,11 +4,15 @@ using WebMagazine.Api.DTOs;
 using WebMagazine.Api.Models;
 using WebMagazine.Api.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebMagazine.Api.Controllers
 {
+    [Authorize]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
+    [ApiVersion("1.0")]
     public class CommentsController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -45,6 +49,8 @@ namespace WebMagazine.Api.Controllers
                 var comment = await _commentService.GetByIdAsync(id);
                 if (comment == null)
                 {
+                    _logger.LogWarning("Comments with ID {Id} not found.", id);
+
                     return NotFound();
                 }
 
@@ -63,7 +69,8 @@ namespace WebMagazine.Api.Controllers
             try
             {
                 var comment = _mapper.Map<Comment>(commentDto);
-                var createdComment = await _commentService.CreateAsync(comment);
+                //var createdComment = await _commentService.CreateAsync(comment);
+                var createdComment = await _commentService.AddCommentAsync(commentDto);
                 return CreatedAtAction(nameof(GetComment), new { id = createdComment.CommentID }, _mapper.Map<CommentDTO>(createdComment));
             }
             catch (Exception ex)
@@ -78,6 +85,8 @@ namespace WebMagazine.Api.Controllers
         {
             if (id != commentDto.CommentID)
             {
+                _logger.LogWarning("Comments with ID {Id} not found for update.", id);
+
                 return BadRequest();
             }
 
@@ -102,6 +111,8 @@ namespace WebMagazine.Api.Controllers
                 var comment = await _commentService.GetByIdAsync(id);
                 if (comment == null)
                 {
+                    _logger.LogWarning("Comments with ID {Id} not found for deletion.", id);
+
                     return NotFound();
                 }
 

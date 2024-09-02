@@ -9,5 +9,9 @@
         public Article Article { get; set; }
         public int UserID { get; set; }
         public User User { get; set; }
+
+        public int? ParentCommentID { get; set; }
+        public Comment? ParentComment { get; set; }
+        public ICollection<Comment> ChildComments { get; set; } = new List<Comment>();
     }
 }

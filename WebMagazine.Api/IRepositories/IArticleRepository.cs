@@ -1,4 +1,5 @@
-﻿using WebMagazine.Api.Models;
+﻿using WebMagazine.Api.DTOs;
+using WebMagazine.Api.Models;
 
 namespace WebMagazine.Api.IRepositories
 {
@@ -6,8 +7,9 @@ namespace WebMagazine.Api.IRepositories
     {
         Task<IEnumerable<Article>> GetAllAsync();
         Task<Article> GetByIdAsync(int id);
-        Task<Article> CreateAsync(Article article);
-        Task<Article> UpdateAsync(Article article);
+        Task<Article> CreateArticleAsync(ArticleDTO articleDto);
+        Task<Article> UpdateArticleAsync(int articleId, ArticleDTO articleDto);
+        Task<string> UploadImageAsync(int articleId, string base64Image);
         Task DeleteAsync(int id);
     }
 }

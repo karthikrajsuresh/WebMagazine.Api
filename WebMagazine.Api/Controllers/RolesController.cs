@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace WebMagazine.Api.Controllers
 {
+
     [ApiController]
     [Route("api/[controller]")]
     public class RolesController : ControllerBase

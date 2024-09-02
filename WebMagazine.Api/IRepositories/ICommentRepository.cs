@@ -1,4 +1,5 @@
-﻿using WebMagazine.Api.Models;
+﻿using WebMagazine.Api.DTOs;
+using WebMagazine.Api.Models;
 
 namespace WebMagazine.Api.IRepositories
 {
@@ -8,6 +9,7 @@ namespace WebMagazine.Api.IRepositories
         Task<Comment> GetByIdAsync(int id);
         Task<Comment> CreateAsync(Comment comment);
         Task<Comment> UpdateAsync(Comment comment);
+        Task<Comment> AddCommentAsync(CommentDTO commentDto);
         Task DeleteAsync(int id);
     }
 }

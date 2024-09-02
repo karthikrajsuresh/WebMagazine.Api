@@ -4,11 +4,15 @@ using WebMagazine.Api.DTOs;
 using WebMagazine.Api.Models;
 using WebMagazine.Api.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebMagazine.Api.Controllers
 {
+    [Authorize]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [Route("api/[controller]")]
+    [ApiVersion("1.0")]
     public class UsersController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -45,6 +49,8 @@ namespace WebMagazine.Api.Controllers
                 var user = await _userService.GetByIdAsync(id);
                 if (user == null)
                 {
+                    _logger.LogWarning("User with ID {Id} not found.", id);
+
                     return NotFound();
                 }
 
@@ -78,6 +84,8 @@ namespace WebMagazine.Api.Controllers
         {
             if (id != userDto.UserID)
             {
+                _logger.LogWarning("User with ID {Id} not found for update.", id);
+
                 return BadRequest();
             }
 
@@ -102,6 +110,8 @@ namespace WebMagazine.Api.Controllers
                 var user = await _userService.GetByIdAsync(id);
                 if (user == null)
                 {
+                    _logger.LogWarning("User with ID {Id} not found for deletion.", id);
+
                     return NotFound();
                 }
 

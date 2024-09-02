@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebMagazine.Api.Models;
 using WebMagazine.Api.Services;
 
 namespace WebMagazine.Api.Controllers
 {
+    [Authorize]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class SubscriptionController : ControllerBase
     {
         private readonly SubscriptionService _subscriptionService;
@@ -40,6 +44,8 @@ namespace WebMagazine.Api.Controllers
                 var subscription = await _subscriptionService.GetByIdAsync(id);
                 if (subscription == null)
                 {
+                    _logger.LogWarning("Subscriptions with ID {Id} not found.", id);
+
                     return NotFound();
                 }
                 return Ok(subscription);
@@ -73,6 +79,8 @@ namespace WebMagazine.Api.Controllers
             {
                 if (id != subscription.SubscriptionID)
                 {
+                    _logger.LogWarning("Subscriptions with ID {Id} not found for update.", id);
+
                     return BadRequest();
                 }
 
@@ -94,6 +102,8 @@ namespace WebMagazine.Api.Controllers
                 var subscription = await _subscriptionService.GetByIdAsync(id);
                 if (subscription == null)
                 {
+                    _logger.LogWarning("Subscriptions with ID {Id} not found for deletion.", id);
+
                     return NotFound();
                 }
 

@@ -4,11 +4,15 @@ using WebMagazine.Api.DTOs;
 using WebMagazine.Api.Models;
 using WebMagazine.Api.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebMagazine.Api.Controllers
 {
+    [Authorize]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [Route("api/[controller]")]
+    [ApiVersion("1.0")]
     public class CategoriesController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -45,6 +49,7 @@ namespace WebMagazine.Api.Controllers
                 var category = await _categoryService.GetByIdAsync(id);
                 if (category == null)
                 {
+                    _logger.LogWarning("Categories with ID {Id} not found.", id);
                     return NotFound();
                 }
 
@@ -78,6 +83,7 @@ namespace WebMagazine.Api.Controllers
         {
             if (id != categoryDto.CategoryID)
             {
+                _logger.LogWarning("Categories with ID {Id} not found for update.", id);
                 return BadRequest();
             }
 
@@ -102,6 +108,7 @@ namespace WebMagazine.Api.Controllers
                 var category = await _categoryService.GetByIdAsync(id);
                 if (category == null)
                 {
+                    _logger.LogWarning("Categories with ID {Id} not found for deletion.", id);
                     return NotFound();
                 }
 
